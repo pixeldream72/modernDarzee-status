@@ -1,0 +1,137 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order Status</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="card">
+  <h2>Modern Darzee</h2>
+  <div id="out" class="msg">Loading...</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="script.js"></script>
+</body>
+=======
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order Status</title>
+<style>
+  *{box-sizing:border-box}
+  body{font-family:sans-serif;background:#f4f4f6;margin:0;padding:16px}
+  .card{max-width:440px;margin:0 auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  h2{margin:0 0 4px;text-align:center}
+  .no{text-align:center;color:#555;margin-bottom:12px}
+  .badge{display:block;width:fit-content;margin:8px auto;padding:8px 26px;border-radius:24px;color:#fff;font-size:18px;font-weight:bold}
+  .pending{background:#e6a700}.completed{background:#2e9d4f}.delivered{background:#777}
+  .due{text-align:center;margin:8px 0 16px}
+  .item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid #eee}
+  .item small{color:#777;display:block}
+  .sum{margin-top:12px;border-top:2px solid #ddd;padding-top:8px}
+  .row{display:flex;justify-content:space-between;padding:3px 0}
+  .bal{font-weight:bold;font-size:18px}
+  .red{color:#d32f2f}.green{color:#2e9d4f}
+  .msg{text-align:center;padding:30px 0;color:#555}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Modern Darzee</h2>
+  <div id="out" class="msg">Loading...</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey: "YOUR_API_KEY",
+  projectId: "moderndarzee"
+});
+
+const params = new URLSearchParams(location.search);
+const u = params.get("u");
+const t = params.get("t");
+const out = document.getElementById("out");
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+function row(label, value, cls) {
+  const r = el("div", "row" + (cls ? " " + cls : ""));
+  r.appendChild(el("span", "", label));
+  r.appendChild(el("span", "", value));
+  return r;
+}
+const pkr = n => (n || 0).toLocaleString() + " PKR";
+const fmt = ms => new Date(ms).toLocaleDateString("en-GB", {day:"2-digit", month:"short", year:"numeric"});
+
+function show(msg) { out.className = "msg"; out.textContent = msg; }
+
+function render(o) {
+  out.className = "";
+  out.textContent = "";
+
+  out.appendChild(el("div", "no", "Order " + (o.orderNo || "")));
+
+  const st = (o.status || "pending").toLowerCase();
+  out.appendChild(el("span", "badge " + st, st.toUpperCase()));
+
+  if (o.dueDate) out.appendChild(el("div", "due", "Delivery: " + fmt(o.dueDate)));
+
+  (o.services || []).forEach(s => {
+    const item = el("div", "item");
+    const left = el("div");
+    const name = el("div", "", s.serviceName || "");
+    name.dir = "auto";
+    const who = el("small", "", s.customerName || "");
+    who.dir = "auto";
+    left.appendChild(name);
+    left.appendChild(who);
+
+    const q = s.quantity || 1;
+    const right = el("div");
+    right.style.textAlign = "right";
+    right.appendChild(el("div", "", "x" + q + "  " + pkr(s.price * q)));
+    right.appendChild(el("small", "", "Done " + (s.completeCount || 0) + "/" + q +
+                                     " · Delivered " + (s.deliveredCount || 0) + "/" + q));
+    item.appendChild(left);
+    item.appendChild(right);
+    out.appendChild(item);
+  });
+
+  const sum = el("div", "sum");
+  sum.appendChild(row("Total", pkr(o.grandTotal)));
+  if (o.discount) sum.appendChild(row("Discount", "- " + pkr(o.discount)));
+  const paid = (o.advancePay || 0) + (o.additionalPay || 0);
+  if (paid) sum.appendChild(row("Paid", pkr(paid)));
+  sum.appendChild(row("Balance", pkr(o.balance), "bal " + (o.balance > 0 ? "red" : "green")));
+  out.appendChild(sum);
+}
+
+if (!u || !t) {
+  show("Invalid link");
+} else {
+  firebase.firestore().doc("users/" + u + "/orderDb/" + t).get()
+    .then(d => {
+      if (!d.exists) return show("Order not found");
+      const o = d.data();
+      if (o.isDelete) return show("This order is no longer available");
+      render(o);
+    })
+    .catch(() => show("Could not load order"));
+}
+</script>
+</body>
+>>>>>>> 2cb2934670daee6c2dd93b4cc0da1e69f3a983d2
+</html>

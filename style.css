@@ -1,0 +1,31 @@
+*{box-sizing:border-box}
+body{font-family:sans-serif;background:#f4f4f6;margin:0;padding:16px;direction:rtl}
+.card{max-width:440px;margin:0 auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+h2{margin:0 0 4px;text-align:center}
+.no{text-align:center;color:#555;margin-bottom:12px}
+.badge{display:block;width:fit-content;margin:8px auto;padding:8px 26px;border-radius:24px;color:#fff;font-size:18px;font-weight:bold}
+.badge.pending{background:#e6a700}
+.badge.completed{background:#2e9d4f}
+.badge.delivered{background:#e9ecef;color:#333}
+.due{text-align:center;margin:8px 0 16px}
+.customer-group{margin-top:12px}
+.customer-header{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;background:#1976d2;color:#fff;font-weight:bold}
+.customer-header small{color:#eaf3ff}
+.item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px;border-top:1px solid #eee;border-radius:8px;margin-top:8px}
+
+/* Service background colors */
+.item.status-pending{background:#f0f793}         /* yellow: default when order is pending */
+.item.status-completed{background:#d4edda}       /* green: order completed */
+.item.status-delivered{background:#f1f3f5}       /* gray: order delivered */
+.item.status-complete-full{background:#a9eeb9}   /* green: completedCount >= qty */
+.item.status-delivered-full{background:#e2e1e1}  /* gray: deliveredCount >= qty (overrides green) */
+
+.service-name{flex:1}
+.service-details{text-align:left;direction:ltr}
+.service-details small{color:#032597;display:block;margin-top:4px}
+.service-price{margin-top:6px;font-weight:bold}
+.sum{margin-top:12px;border-top:2px solid #ddd;padding-top:8px}
+.row{display:flex;justify-content:space-between;padding:3px 0}
+.bal{font-weight:bold;font-size:18px}
+.red{color:#d32f2f}.green{color:#2e9d4f}
+.msg{text-align:center;padding:30px 0;color:#555555}
